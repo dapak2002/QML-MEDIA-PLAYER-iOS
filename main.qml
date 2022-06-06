@@ -1,7 +1,5 @@
 import QtQuick
 import QtQuick.Window
-import QtQuick.Controls
-import QtQuick.Layouts
 import QtMultimedia
 
 Window {
@@ -25,7 +23,6 @@ Window {
             property bool fullScreen: false
 
             anchors.top: fullScreen ? parent.top : menuBar.bottom
-            anchors.bottom: playbackControl.top
             anchors.left: parent.left
             anchors.right: parent.right
 
@@ -37,27 +34,83 @@ Window {
             }
         }
 
-    PlaybackControl {
-            id: playbackControl
-
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-
-            mediaPlayer: mediaPlayer
-        }
-
-    PlayerMenuBar {
+    FileOpener {
             id: menuBar
 
             anchors.left: parent.left
             anchors.right: parent.right
 
-            visible: !videoOutput.fullScreen
+            text: 'Open File'
 
             mediaPlayer: mediaPlayer
-            videoOutput: videoOutput
         }
 
+    Item {
+        width: 300; height: 100
 
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        Row {
+            spacing: 20
+            anchors{
+                 horizontalCenter: parent.horizontalCenter
+                 verticalCenter: parent.verticalCenter
+            }
+            height: parent.height
+            width: childrenRect.width
+            anchors.bottom: parent.bottom
+
+            PauseButton {
+                 id: pauseButton
+                 anchors.verticalCenter: parent.verticalCenter
+                 radius: 50.0
+                 text: "\u2016";
+                 onClicked: mediaPlayer.pause()
+             }
+
+             PlayButton {
+                 id: playButton
+                 anchors.verticalCenter: parent.verticalCenter
+                 radius: 50.0
+                 text: "\u25B6";
+                 onClicked: mediaPlayer.play()
+             }
+
+             StopButton {
+                 id: stopButton
+                 anchors.verticalCenter: parent.verticalCenter
+                 radius: 50.0
+                 text: "\u25A0";
+                 onClicked: mediaPlayer.stop()
+             }
+
+             Text {
+                 id: mediaTime
+                 horizontalAlignment: Text.AlignRight
+                 anchors.verticalCenter: parent.verticalCenter
+                 text: {
+                     var m = Math.floor(mediaPlayer.position / 60000)
+                     var ms = (mediaPlayer.position / 1000 - m * 60).toFixed(1)
+                     return `${m}:${ms.padStart(4, 0)}`
+                 }
+             }
+        }
+
+        PlaybackSlider {
+            id: mediaSlider
+            anchors.bottom: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            property double backend: 0
+
+            maximum:  mediaPlayer.duration
+            value:    mediaPlayer.position
+            minimum: 0
+            mediaPlayer: mediaPlayer
+
+            onClicked: backend = value
+        }
+    }
 }

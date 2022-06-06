@@ -1,8 +1,10 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>PlaybackControl.qml</file>
-        <file>PlaybackSeekControl.qml</file>
-        <file>PlayerMenuBar.qml</file>
+        <file>FileOpener.qml</file>
+        <file>PlayButton.qml</file>
+        <file>PauseButton.qml</file>
+        <file>StopButton.qml</file>
+        <file>PlaybackSlider.qml</file>
     </qresource>
 </RCC>
